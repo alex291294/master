@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="AnalyzVirusesForAndroid">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/chimpchat.jar!/" />
+      <root url="jar://$PROJECT_DIR$/monkeyrunner.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ddmlib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sdklib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/guava-18.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common.jar!/" />
+      <root url="jar://$PROJECT_DIR$/json-simple-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

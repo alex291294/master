@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="chimpchat">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/chimpchat.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

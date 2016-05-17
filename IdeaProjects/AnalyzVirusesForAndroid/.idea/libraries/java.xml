@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="java">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/apk-parser-master.zip!/apk-parser-master/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/apk-parser-master.zip!/apk-parser-master/src/test/java" />
+    </SOURCES>
+  </library>
+</component>
