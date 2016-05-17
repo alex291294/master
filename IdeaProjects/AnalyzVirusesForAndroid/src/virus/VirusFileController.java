@@ -165,7 +165,7 @@ public class VirusFileController implements IVirusFileController {
     }
 
     @Override
-    public void saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
-        indirectTo.logging();
+    public String saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+        return indirectTo.logging();
     }
 }

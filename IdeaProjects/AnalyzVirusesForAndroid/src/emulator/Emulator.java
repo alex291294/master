@@ -33,11 +33,12 @@ public class Emulator {
                 }
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(processRun.getErrorStream()));
                 try {
-                    if (bufferedReader.readLine() != null) {
+                    final String messageError;
+                    if ((messageError = bufferedReader.readLine()) != null) {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialogUtils.showDialog(DialogMessage.RUN_EMU_ERROR, DialogMessage.ERROR_START_EMU);
+                                AlertDialogUtils.showDialog(DialogMessage.RUN_EMU_ERROR, messageError);
                             }
                         });
                     }

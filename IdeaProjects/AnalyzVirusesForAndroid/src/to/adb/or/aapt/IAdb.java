@@ -10,5 +10,5 @@ import java.io.IOException;
 public interface IAdb {
     void stopEmulator() throws IOException;
     void runApp(String pathPackage) throws IOException;
-    void logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
+    String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
 }

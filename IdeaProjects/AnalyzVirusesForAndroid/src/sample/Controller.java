@@ -52,6 +52,9 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
     @FXML
     private TextField pathAAPT;
 
+    @FXML
+    private TextArea logsArea;
+
     private IVirusFileController virusFileController;
 
     @Override
@@ -160,6 +163,6 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
     }
 
     public void saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
-        virusFileController.saveLogs();
+        logsArea.setText(virusFileController.saveLogs());
     }
 }

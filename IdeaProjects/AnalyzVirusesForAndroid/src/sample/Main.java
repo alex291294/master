@@ -13,7 +13,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Analysis Viruses For Android");
-        primaryStage.setScene(new Scene(root, 619, 703));
+        primaryStage.setScene(new Scene(root, 619, 686));
         ((Controller)fxmlLoader.getController()).setStge(primaryStage);
         primaryStage.show();
     }

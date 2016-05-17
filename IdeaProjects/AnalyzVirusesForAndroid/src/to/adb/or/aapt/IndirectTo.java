@@ -26,7 +26,7 @@ public class IndirectTo {
         adb.stopEmulator();
     }
 
-    public void logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
-        adb.logging();
+    public String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+        return adb.logging();
     }
 }

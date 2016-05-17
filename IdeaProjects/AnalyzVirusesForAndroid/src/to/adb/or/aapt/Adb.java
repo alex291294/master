@@ -34,9 +34,9 @@ public class Adb implements IAdb {
     }
 
     @Override
-    public void logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
         Runtime.getRuntime().exec(ADB + LOGCAT_CLEAR);
         Process process = Runtime.getRuntime().exec(ADB + LOGCAT);
-        AlertDialogUtils.showLoggingDialog(process);
+        return AlertDialogUtils.showLoggingDialog(process);
     }
 }

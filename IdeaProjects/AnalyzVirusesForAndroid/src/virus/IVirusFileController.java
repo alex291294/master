@@ -25,5 +25,5 @@ public interface IVirusFileController {
     void runApp() throws IOException, InterruptedException;
     void shutDown();
     void runEmulator() throws IOException;
-    void saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
+    String saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
 }
