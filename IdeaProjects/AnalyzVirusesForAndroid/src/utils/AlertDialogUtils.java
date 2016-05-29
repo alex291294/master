@@ -14,13 +14,14 @@ import java.util.Optional;
  * Created by alex on 20.01.16.
  */
 public class AlertDialogUtils {
-    private static Alert alert;
     private static final String LOGGING = "Логгирование";
     private static final String LOGGING_STOP = "Ведется сбор логгов";
     private static final String STOP = "Остановить";
+    private static final String CLOSE = "Свернуть";
+    private static final String WAIT_EXECUTE_OPERATION = "Ожидайте выполнение операции";
 
     public static void showDialog(String headerText, String contextText) {
-        alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Dialog");
         alert.setHeaderText(headerText);
         alert.getDialogPane().setContent(new Label(contextText));
@@ -28,10 +29,11 @@ public class AlertDialogUtils {
     }
 
     public static String showLoggingDialog(Process process) throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
-        alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(LOGGING);
         alert.setHeaderText(LOGGING_STOP);
-        alert.setGraphic(new ImageView(AlertDialogUtils.class.getResource("progress.gif").toExternalForm()));
+        alert.setGraphic(new ImageView(AlertDialogUtils.class
+                .getResource("progress.gif").toExternalForm()));
         ButtonType stop = new ButtonType(STOP);
         alert.getButtonTypes().setAll(stop);
         Optional<ButtonType> click = alert.showAndWait();
@@ -43,5 +45,23 @@ public class AlertDialogUtils {
             return JSONParserUtils.createJsonFile(process);
         }
         return null;
+    }
+
+    public static Alert showProcessDialog(String headerText) {
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle(WAIT_EXECUTE_OPERATION);
+        alert.setHeaderText(headerText);
+        alert.setGraphic(new ImageView(AlertDialogUtils.class
+                .getResource("progress.gif").toExternalForm()));
+        ButtonType close = new ButtonType(CLOSE);
+        alert.getButtonTypes().setAll(close);
+        return alert;
+    }
+
+    public static void showInformationDialog(String title, String headerText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.showAndWait();
     }
 }

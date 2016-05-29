@@ -1,10 +1,12 @@
 package sample;
 
+import decompile.ApkToJar;
+import decompile.Decompile;
+import decompile.JarToJava;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -19,10 +21,12 @@ import virus.VirusFileModel;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class Controller implements Initializable, EventHandler<WindowEvent> {
 
@@ -54,6 +58,15 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     @FXML
     private TextArea logsArea;
+
+    @FXML
+    private Tab decompileTab;
+
+    @FXML
+    private TreeView<File> decompileTree;
+
+    @FXML
+    private TextArea decompileCode;
 
     private IVirusFileController virusFileController;
 
@@ -164,5 +177,53 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     public void saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
         logsArea.setText(virusFileController.saveLogs());
+    }
+
+    private TreeItem<File> createTree(String nameFile, TreeItem<File> treeItem) {
+        File file = new File(nameFile);
+        treeItem = new TreeItem<>(file);
+        for (File file1 : file.listFiles()) {
+            TreeItem<File> treeItem1 = null;
+            if (file1.isDirectory()) {
+                treeItem1 = createTree(file1.getPath(), treeItem1);
+            } else {
+                treeItem1 = new TreeItem<>(file1);
+            }
+            treeItem.getChildren().add(treeItem1);
+        }
+        return treeItem;
+    }
+
+    public void showTree() {
+        String[] path = pathToFile.getText().split("/");
+        String nameFile = path[path.length - 1].split(".apk")[0];
+        nameFile += "-dex";
+        TreeItem<File> rootItem = null;
+        rootItem = createTree(nameFile, rootItem);
+        decompileTree.setRoot(rootItem);
+    }
+
+    public void showDecompileCode() {
+        TreeItem<File> treeItem = decompileTree.getSelectionModel().getSelectedItem();
+        if (!treeItem.getValue().isDirectory()) {
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+                Scanner scanner = new Scanner(treeItem.getValue());
+                while (scanner.hasNext()) {
+                    stringBuilder.append(scanner.nextLine()).append("\n");
+                }
+                decompileCode.setText(stringBuilder.toString());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void selectDecompile() {
+        if (decompileTab.isSelected()) {
+            Decompile decompile = new ApkToJar();
+            decompile.setNext(new JarToJava());
+            decompile.decompile(pathToFile.getText());
+        }
     }
 }
