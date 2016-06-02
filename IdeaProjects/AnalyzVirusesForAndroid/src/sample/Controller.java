@@ -1,8 +1,7 @@
 package sample;
 
-import decompile.ApkToJar;
-import decompile.Decompile;
-import decompile.JarToJava;
+import decompile.DecompileExecutor;
+import decompile.IDecompile;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,6 +68,8 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
     private TextArea decompileCode;
 
     private IVirusFileController virusFileController;
+
+    private IDecompile decompileExecutor;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -195,6 +196,7 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
     }
 
     public void showTree() {
+        decompileExecutor.jarToJava();
         String[] path = pathToFile.getText().split("/");
         String nameFile = path[path.length - 1].split(".apk")[0];
         nameFile += "-dex";
@@ -221,9 +223,8 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     public void selectDecompile() {
         if (decompileTab.isSelected()) {
-            Decompile decompile = new ApkToJar();
-            decompile.setNext(new JarToJava());
-            decompile.decompile(pathToFile.getText());
+            decompileExecutor = new DecompileExecutor(pathToFile.getText());
+            decompileExecutor.apkToJar();
         }
     }
 }
