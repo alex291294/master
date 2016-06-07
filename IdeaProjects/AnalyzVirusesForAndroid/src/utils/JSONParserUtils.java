@@ -1,55 +1,90 @@
 package utils;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.xml.bind.DatatypeConverter;
+import java.io.*;
 
 /**
  * Created by alex on 03.03.16.
  */
 public class JSONParserUtils {
 
-    public static String createJsonFile(Process process) throws IOException, ParseException {
+    private static final String ENCODING_ERROR_TITLE = "Ошибка преобразования строки";
+    private static final String ENCODING_ERROR_CONTENT = "Ошибка кодировки";
+    private static final String DATA = "data";
+    private static final String REGEX_STRING_TO_PART = "\"";
+    private static final String PATH = "path";
+    private static final String REGEX_DROID_BOX = "DroidBox:";
+
+    public static String createJsonFile(Process process) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String lineLog = null;
-        StringBuilder lineJSON = new StringBuilder();
-        boolean isWrittenFirstBracket = false;
+        StringBuilder lineJSON = new StringBuilder("{");
         FileWriter fileWriter = new FileWriter("logging.json");
         while ((lineLog = bufferedReader.readLine()) != null) {
-            String[] json = lineLog.split("\\{");
+            String[] json = lineLog.split(REGEX_DROID_BOX);
             if (json.length > 1) {
-                for (int i = 1; i < json.length; i++) {
-                    if (!isWrittenFirstBracket) {
-                        lineJSON.append("{" + json[i]);
-                        isWrittenFirstBracket = true;
-                    } else {
-                        if (i > 1) {
-                            lineJSON.append("{");
-                        }
-                        lineJSON.append(json[i]);
-                    }
+                String[] pasreArray = json[1].split(REGEX_STRING_TO_PART);
+                lineJSON
+                        .append(pasreArray[0])
+                        .append(" ")
+                        .append(pasreArray[1])
+                        .append(" ")
+                        .append(pasreArray[2])
+                        .append(" ");
+                for (int i = 3; i < pasreArray.length; i++) {
+                    lineJSON.append(parseString(pasreArray, i));
+                    i += 3;
                 }
-                lineJSON.delete(lineJSON.length() - 1, lineJSON.length());
                 lineJSON.append("\n");
             }
         }
-        JSONObject jsonObject= null;
-        if (lineJSON.length() != 0) {
-            lineJSON.append("}");
-            JSONParser parser = new JSONParser();
-            jsonObject = (JSONObject) parser.parse(lineJSON.toString());
-        }
+        lineJSON.append("}");
         process.destroy();
-        if (jsonObject != null) {
-            fileWriter.append(jsonObject.toJSONString());
-            fileWriter.close();
-            return jsonObject.toJSONString();
+        fileWriter.append(lineJSON.toString());
+        fileWriter.close();
+        return lineJSON.toString();
+    }
+
+    private static void addParse(String[] array, int num,
+                                   StringBuilder stringBuilder, String value) {
+        stringBuilder
+                .append(array[num])
+                .append(" ")
+                .append(array[++num])
+                .append(" ")
+                .append(value)
+                .append(array[num + 2])
+                .append(" ");
+    }
+
+    private static String parseString(String[] array, int num) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (isPathOrData(array[num])) {
+            addParse(array, num, stringBuilder, hexToString(array[num + 2]));
+        } else {
+            addParse(array, num, stringBuilder, array[num + 2]);
         }
-        return null;
+        return stringBuilder.toString();
+    }
+
+    private static boolean isPathOrData(String value) {
+        if (DATA.equals(value)) {
+            return true;
+        } else if (PATH.equals(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static String hexToString(String hex) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            byte[] buf = DatatypeConverter.parseHexBinary(hex);
+            stringBuilder.append(new String(buf, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            AlertDialogUtils.showInformationDialog(ENCODING_ERROR_TITLE,
+                    ENCODING_ERROR_CONTENT);
+        }
+        return stringBuilder.toString();
     }
 }

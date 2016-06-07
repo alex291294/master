@@ -12,7 +12,11 @@ import java.io.InputStreamReader;
  * Created by alex on 20.01.16.
  */
 public class Emulator {
-    private static final String PARAMS_EMU = " -avd %s -system images/system.img -ramdisk images/ramdisk.img -wipe-data -prop dalvik.vm.execution-mode=int:portable";
+    private static final String PARAMS_EMU = " -avd %s -system images/system.img " +
+            "-ramdisk images/ramdisk.img " +
+            "-wipe-data -prop dalvik.vm.execution-mode=int:portable " +
+            "-http-proxy localhost:9090";
+    private static final String RUN_EMU_ERROR = "При запуске эмулятора возникла ошибка";
     private String pathEmulator;
     private String nameEmulator;
 
@@ -29,7 +33,12 @@ public class Emulator {
                 try {
                     processRun = Runtime.getRuntime().exec(pathEmulator + String.format(PARAMS_EMU, nameEmulator));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialogUtils.showDialog(RUN_EMU_ERROR, e.getMessage());
+                        }
+                    });
                 }
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(processRun.getErrorStream()));
                 try {
@@ -42,9 +51,7 @@ public class Emulator {
                             }
                         });
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                } catch (IOException e) {}
             }
         }).start();
     }

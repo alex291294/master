@@ -1,6 +1,5 @@
 package virus;
 
-import org.json.simple.parser.ParseException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,10 +19,9 @@ public interface IVirusFileController {
     String getPathEmulator();
     String getPathAdb();
     String getPathAapt();
-    Collection<String> scanVirusFileManifest() throws IOException, ParserConfigurationException, SAXException;
+    Collection<String> scanVirusFileManifest();
     void installApp(String installPackageName);
     void runApp() throws IOException, InterruptedException;
-    void shutDown();
     void runEmulator() throws IOException;
-    String saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
+    String saveLogs() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException;
 }

@@ -1,6 +1,6 @@
 package to.adb.or.aapt;
 
-import org.json.simple.parser.ParseException;
+import utils.AlertDialogUtils;
 
 import java.io.IOException;
 
@@ -16,17 +16,19 @@ public class IndirectTo {
         this.adb = adb;
     }
 
-    public void runApp(String pathToFile) throws IOException, InterruptedException {
-        String pathPackage = aapt.getPathPackage(pathToFile);
-        String pathActivity = aapt.getPathMainActivity(pathToFile);
-        adb.runApp(pathPackage + "/" + pathActivity);
+    public void runApp(String pathToFile)  {
+        if (!pathToFile.isEmpty()) {
+            String pathPackage = aapt.getPathPackage(pathToFile);
+            String pathActivity = aapt.getPathMainActivity(pathToFile);
+            try {
+                adb.runApp(pathPackage + "/" + pathActivity);
+            } catch (IOException e) {
+                AlertDialogUtils.showDialog(Aapt.RUN_APP_ERROR, e.getMessage());
+            }
+        }
     }
 
-    public void stopEmulator() throws IOException {
-        adb.stopEmulator();
-    }
-
-    public String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public String logging() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         return adb.logging();
     }
 }

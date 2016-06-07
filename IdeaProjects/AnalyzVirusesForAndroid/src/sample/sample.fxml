@@ -10,7 +10,7 @@
 
 <TabPane prefHeight="686.0" prefWidth="619.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <tabs>
-      <Tab text="Главная">
+      <Tab closable="false" text="Главная">
          <content>
             <AnchorPane fx:id="anchorPane" prefHeight="681.0" prefWidth="619.0">
                <children>
@@ -38,7 +38,7 @@
             </AnchorPane>
          </content>
       </Tab>
-      <Tab text="Логгирование">
+      <Tab closable="false" text="Логгирование">
         <content>
           <AnchorPane>
                <children>
@@ -48,7 +48,7 @@
             </AnchorPane>
         </content>
       </Tab>
-      <Tab fx:id="decompileTab" onSelectionChanged="#selectDecompile" text="Декомпиляция">
+      <Tab fx:id="decompileTab" closable="false" onSelectionChanged="#selectDecompile" text="Декомпиляция">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -57,6 +57,16 @@
                   <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#showTree" text="Показать файлы" />
                </children>
             </AnchorPane>
+        </content>
+      </Tab>
+      <Tab closable="false" text="Прокси сервер">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#startProxy" text="Запустить" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                  <Button layoutX="109.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopProxy" text="Остановить" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="14.0" />
+                  <TextArea fx:id="logProxy" layoutX="14.0" layoutY="51.0" prefHeight="588.0" prefWidth="590.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0" />
+               </children></AnchorPane>
         </content>
       </Tab>
    </tabs>

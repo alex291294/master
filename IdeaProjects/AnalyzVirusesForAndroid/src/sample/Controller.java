@@ -9,11 +9,10 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.json.simple.parser.ParseException;
 import org.xml.sax.SAXException;
+import proxy.ProxyServer;
 import utils.AlertDialogUtils;
 import utils.DialogMessage;
-import utils.ListDangerousPermissions;
 import virus.IVirusFileController;
 import virus.VirusFileController;
 import virus.VirusFileModel;
@@ -35,6 +34,7 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
     private static final String EMULATOR = "Choose emulator file";
 
     private FileChooser fileChooser = new FileChooser();
+
     private Stage stage;
 
     @FXML
@@ -66,6 +66,9 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     @FXML
     private TextArea decompileCode;
+
+    @FXML
+    private TextArea logProxy;
 
     private IVirusFileController virusFileController;
 
@@ -100,7 +103,6 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     @Override
     public void handle(WindowEvent event) {
-        virusFileController.shutDown();
         System.exit(0);
     }
 
@@ -162,9 +164,8 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
         }
     }
 
-    public void getPermissions() throws ParserConfigurationException, SAXException, IOException {
+    public void getPermissions() {
         Collection<String> permissions = virusFileController.scanVirusFileManifest();
-        permissions = ListDangerousPermissions.checkOnDangerous(permissions);
         String allPermissions = "";
         for (String permission : permissions) {
             allPermissions += permission + "\n";
@@ -176,7 +177,7 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
         virusFileController.runApp();
     }
 
-    public void saveLogs() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public void saveLogs() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         logsArea.setText(virusFileController.saveLogs());
     }
 
@@ -197,12 +198,14 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
 
     public void showTree() {
         decompileExecutor.jarToJava();
-        String[] path = pathToFile.getText().split("/");
-        String nameFile = path[path.length - 1].split(".apk")[0];
-        nameFile += "-dex";
-        TreeItem<File> rootItem = null;
-        rootItem = createTree(nameFile, rootItem);
-        decompileTree.setRoot(rootItem);
+        if (!pathToFile.getText().isEmpty()) {
+            String[] path = pathToFile.getText().split("/");
+            String nameFile = path[path.length - 1].split(".apk")[0];
+            nameFile += "-dex";
+            TreeItem<File> rootItem = null;
+            rootItem = createTree(nameFile, rootItem);
+            decompileTree.setRoot(rootItem);
+        }
     }
 
     public void showDecompileCode() {
@@ -226,5 +229,13 @@ public class Controller implements Initializable, EventHandler<WindowEvent> {
             decompileExecutor = new DecompileExecutor(pathToFile.getText());
             decompileExecutor.apkToJar();
         }
+    }
+
+    public void startProxy() {
+        ProxyServer.getInstance().runServer(logProxy);
+    }
+
+    public void stopProxy() {
+        ProxyServer.getInstance().stopServer();
     }
 }

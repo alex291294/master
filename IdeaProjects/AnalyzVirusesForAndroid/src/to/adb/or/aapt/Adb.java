@@ -1,12 +1,8 @@
 package to.adb.or.aapt;
 
-import org.json.simple.parser.ParseException;
 import utils.AlertDialogUtils;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Created by alex on 21.01.16.
@@ -34,7 +30,7 @@ public class Adb implements IAdb {
     }
 
     @Override
-    public String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public String logging() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         Runtime.getRuntime().exec(ADB + LOGCAT_CLEAR);
         Process process = Runtime.getRuntime().exec(ADB + LOGCAT);
         return AlertDialogUtils.showLoggingDialog(process);

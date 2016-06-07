@@ -4,7 +4,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -14,6 +13,8 @@ import java.util.Optional;
  * Created by alex on 20.01.16.
  */
 public class AlertDialogUtils {
+
+    private static final String ERROR = "Ошибка";
     private static final String LOGGING = "Логгирование";
     private static final String LOGGING_STOP = "Ведется сбор логгов";
     private static final String STOP = "Остановить";
@@ -22,13 +23,13 @@ public class AlertDialogUtils {
 
     public static void showDialog(String headerText, String contextText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Dialog");
+        alert.setTitle(ERROR);
         alert.setHeaderText(headerText);
         alert.getDialogPane().setContent(new Label(contextText));
         alert.showAndWait();
     }
 
-    public static String showLoggingDialog(Process process) throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public static String showLoggingDialog(Process process) throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(LOGGING);
         alert.setHeaderText(LOGGING_STOP);
@@ -58,10 +59,19 @@ public class AlertDialogUtils {
         return alert;
     }
 
-    public static void showInformationDialog(String title, String headerText) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private static void showDialog(String title, String headerText,
+                                   Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.showAndWait();
+    }
+
+    public static void showInformationDialog(String title, String headerText) {
+        showDialog(title, headerText, Alert.AlertType.INFORMATION);
+    }
+
+    public static void showErrorDialog(String title, String headerText) {
+        showDialog(title, headerText, Alert.AlertType.ERROR);
     }
 }

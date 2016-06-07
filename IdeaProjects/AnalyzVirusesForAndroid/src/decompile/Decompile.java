@@ -23,6 +23,7 @@ public class Decompile {
     private static final String DECOMPILE_PROCESS = "Выполнение декомпиляции";
     private static final String DECOMPILE_FINISHED = "Декомпиляция выполнена";
     private static final String DECOMPILE_SUCCESSED = "Успешное выполнение декомпиляции";
+    private static final String PATH_IS_EMPTY = "Укажите путь к .apk";
 
     private String pathToVirus;
 
@@ -36,35 +37,39 @@ public class Decompile {
     }
 
     public void apkToJar() {
-        Alert alert = AlertDialogUtils.showProcessDialog(DECOMPILE_PROCESS);
-        alert.setOnShown(event -> {
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    try {
-                        Process process = Runtime.getRuntime().exec(DEX_TO_JAR + pathToVirus);
+        if (!pathToVirus.isEmpty()) {
+            Alert alert = AlertDialogUtils.showProcessDialog(DECOMPILE_PROCESS);
+            alert.setOnShown(event -> {
+                Task<Void> task = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
                         try {
-                            process.waitFor();
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AlertDialogUtils.showInformationDialog(DECOMPILE_FINISHED,
-                                            DECOMPILE_SUCCESSED);
-                                }
-                            });
-                        } catch (InterruptedException e) {
+                            Process process = Runtime.getRuntime().exec(DEX_TO_JAR + pathToVirus);
+                            try {
+                                process.waitFor();
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlertDialogUtils.showInformationDialog(DECOMPILE_FINISHED,
+                                                DECOMPILE_SUCCESSED);
+                                    }
+                                });
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            AlertDialogUtils.showDialog(DECOMPILE_ERROR, e.getMessage());
                             e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        AlertDialogUtils.showDialog(DECOMPILE_ERROR, e.getMessage());
-                        e.printStackTrace();
+                        return null;
                     }
-                    return null;
-                }
-            };
-            new Thread(task).start();
-        });
-        alert.show();
+                };
+                new Thread(task).start();
+            });
+            alert.show();
+        } else {
+            AlertDialogUtils.showDialog(PATH_IS_EMPTY, "");
+        }
     }
 
     public void jarToJava() {
@@ -75,14 +80,16 @@ public class Decompile {
             }
         });
         try {
-            String folder = files[0].getName().split(".jar")[0];
-            File file = new File(folder);
-            if (file.exists()) {
-                FileUtils.deleteFolder(file);
+            if (files.length != 0) {
+                String folder = files[0].getName().split(".jar")[0];
+                File file = new File(folder);
+                if (file.exists()) {
+                    FileUtils.deleteFolder(file);
+                }
+                new Decompiler().decompile(files[0].getAbsolutePath(),
+                        folder);
+                files[0].delete();
             }
-            new Decompiler().decompile(files[0].getAbsolutePath(),
-                    folder);
-            files[0].delete();
         } catch (DecompilerException e) {
             e.printStackTrace();
         } catch (IOException e) {

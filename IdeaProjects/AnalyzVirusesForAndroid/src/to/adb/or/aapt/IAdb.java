@@ -1,7 +1,5 @@
 package to.adb.or.aapt;
 
-import org.json.simple.parser.ParseException;
-
 import java.io.IOException;
 
 /**
@@ -10,5 +8,5 @@ import java.io.IOException;
 public interface IAdb {
     void stopEmulator() throws IOException;
     void runApp(String pathPackage) throws IOException;
-    String logging() throws IOException, InterruptedException, ParseException, NoSuchFieldException, IllegalAccessException;
+    String logging() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException;
 }
